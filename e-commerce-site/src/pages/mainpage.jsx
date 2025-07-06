@@ -12,6 +12,23 @@ import hedgehodANIMAL from '../assets/porkyANIMAL.png';
 import teaANIMAL from '../assets/teaANIMAL.png';
 import llamaANIMAL from '../assets/llamaANIMAL.png';
 import beeANIMAL from '../assets/beeANIMAL.png';
+import greenMEME from '../assets/greenhairMEME.png';
+import saitamaMEME from '../assets/saitamaMEME.png';
+import leviMEME from '../assets/leviMEME.png';
+import animeMEME from '../assets/animeMEME.png';
+import dekuMEME from '../assets/dekuMEME.png';
+import succulentPLANT from '../assets/succulentPLANT.png';
+import cactusPLANT from '../assets/cacPLANT.png';
+import hangPLANT from '../assets/hangPLANT.png';
+import mushroomPLANT from '../assets/mushroomPLANT.png';
+import lilguyPLANT from '../assets/lilguyPLANT.png';
+
+
+import milesMARVEL from '../assets/milesMARVEL.png';
+import captainamericaMARVEL from '../assets/captainamericaMARVEL.png';
+import purechaosMARVEL from '../assets/purechaosMARVEL.png';
+import spidermanMARVEL from '../assets/spidermanMARVEL.png';
+import thorMARVEL from '../assets/thorMARVEL.png';
 
 
 export default function App() {
@@ -30,7 +47,28 @@ export default function App() {
         { id: 9, name: 'Calm Llama', artist: 'AnimalLover', price: 30.00, image: llamaANIMAL, availableAs: ['sticker','poster'], description: 'Llama Meditating.', category: 'animals' },
         { id: 10, name: 'Chill Bee', artist: 'AnimalLover', price: 18.00, image: beeANIMAL, availableAs: ['sticker'], description: 'A bee with sunglasses.', category: 'animals' },
 
-
+        { id: 11, name: 'Green Hair OC', artist: 'Gary Uzumaki', price: 14.00, image: greenMEME, availableAs: ['sticker'], description: 'Original Character with green hair.', category: 'anime' },
+        { id: 12, name: 'Egg Man', artist: 'Gary Uzumaki', price: 8.00, image: saitamaMEME, availableAs: ['poster'], description: 'Saitama with eggs and explosion.', category: 'anime' },
+        { id: 13, name: 'Levi The Cleaner', artist: 'Gary Uzumaki', price: 9.00, image: leviMEME, availableAs: ['poster'], description: 'Levi from Attack on Titan aggressively cleaning.', category: 'anime' },
+        { id: 14, name: 'Original Character', artist: 'Gary Uzumaki', price: 30.00, image: animeMEME, availableAs: ['sticker'], description: 'Original Character, Greg.', category: 'anime' },
+        { id: 15, name: 'Deku Work Meme', artist: 'Gary Uzumaki', price: 20.00, image: dekuMEME, availableAs: ['sticker','poster'], description: 'Deku from My Hero Academia working on assignment.', category: 'anime' },
+ 
+ 
+        { id: 16, name: 'Cute Succulent', artist: 'Botanic Artist', price: 17.00, image: succulentPLANT, availableAs: ['poster'], description: 'Cartoon Succulent.', category: 'plant' },
+        { id: 17, name: 'Cute Cactus', artist: 'Botanic Artist', price: 10.00, image: cactusPLANT, availableAs: ['poster'], description: 'Cartoon Cactus.', category: 'plant' },
+        { id: 18, name: 'Cute Hanging Plant', artist: 'Botanic Artist', price: 30.00, image: hangPLANT, availableAs: ['sticker'], description: 'Cartoon hanging plant.', category: 'plant' },
+        { id: 19, name: 'Mushroom Party', artist: 'Botanic Artist', price: 4.00, image: mushroomPLANT, availableAs: ['sticker'], description: 'Personified mushrooms have a party.', category: 'plant' },
+        { id: 20, name: 'Hidden Friend', artist: 'Botanic Artist', price: 3.00, image: lilguyPLANT, availableAs: ['sticker','poster'], description: 'An original charcter hidden in a plant.', category: 'plant' },
+ 
+ 
+        { id: 21, name: 'Miles Morales Jump', artist: 'MarvelIsBetter', price: 20.00, image: milesMARVEL, availableAs: ['sticker','poster'], description: 'Miles Morales Art.', category: 'superheros' },
+        { id: 22, name: 'Captain America Art', artist: 'MarvelIsBettert', price: 13.00, image: captainamericaMARVEL, availableAs: ['poster'], description: 'Captain America Art.', category: 'superheros' },
+        { id: 23, name: 'PURE CHAOS!', artist: 'MarvelIsBetter', price: 6.00, image: purechaosMARVEL, availableAs: ['sticker'], description: 'PUREEE CHAOOSSS.', category: 'superheros' },
+        { id: 24, name: 'Spiderman', artist: 'MarvelIsBetter', price: 20.00, image: spidermanMARVEL, availableAs: ['poster'], description: 'Spiderman jumping towards camera.', category: 'superheros' },
+        { id: 25, name: 'Thors Fury', artist: 'MarvelIsBetter', price: 12.00, image: thorMARVEL, availableAs: ['sticker','poster'], description: 'Thor using his hammer.', category: 'superheros' },
+ 
+ 
+ 
     ]);
     
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -138,7 +176,7 @@ function Header({navigateTo,cartCount}){
     );
 }
 
-//hompage
+//homepage
 
 
 //shows the item when user clicks on it page
