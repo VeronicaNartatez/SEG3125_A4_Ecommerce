@@ -67,8 +67,6 @@ export default function App() {
         { id: 24, name: 'Spiderman', artist: 'MarvelIsBetter', price: 20.00, image: spidermanMARVEL, availableAs: ['poster'], description: 'Spiderman jumping towards camera.', category: 'superheros' },
         { id: 25, name: 'Thors Fury', artist: 'MarvelIsBetter', price: 12.00, image: thorMARVEL, availableAs: ['sticker','poster'], description: 'Thor using his hammer.', category: 'superheros' },
  
- 
- 
     ]);
     
     const [selectedProduct, setSelectedProduct] = useState(null);
