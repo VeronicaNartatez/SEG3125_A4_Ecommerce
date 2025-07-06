@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './mainpage.css'; // Import the CSS file
+import './mainpage.css'; 
 
 //pics
 import anyaPicANIME from '../assets/anyaANIME.png';
@@ -54,11 +54,11 @@ export default function App() {
         { id: 15, name: 'Deku Work Meme', artist: 'Gary Uzumaki', price: 20.00, image: dekuMEME, availableAs: ['sticker','poster'], description: 'Deku from My Hero Academia working on assignment.', category: 'anime' },
  
  
-        { id: 16, name: 'Cute Succulent', artist: 'Botanic Artist', price: 17.00, image: succulentPLANT, availableAs: ['poster'], description: 'Cartoon Succulent.', category: 'plant' },
-        { id: 17, name: 'Cute Cactus', artist: 'Botanic Artist', price: 10.00, image: cactusPLANT, availableAs: ['poster'], description: 'Cartoon Cactus.', category: 'plant' },
-        { id: 18, name: 'Cute Hanging Plant', artist: 'Botanic Artist', price: 30.00, image: hangPLANT, availableAs: ['sticker'], description: 'Cartoon hanging plant.', category: 'plant' },
-        { id: 19, name: 'Mushroom Party', artist: 'Botanic Artist', price: 4.00, image: mushroomPLANT, availableAs: ['sticker'], description: 'Personified mushrooms have a party.', category: 'plant' },
-        { id: 20, name: 'Hidden Friend', artist: 'Botanic Artist', price: 3.00, image: lilguyPLANT, availableAs: ['sticker','poster'], description: 'An original charcter hidden in a plant.', category: 'plant' },
+        { id: 16, name: 'Cute Succulent', artist: 'Botanic Artist', price: 17.00, image: succulentPLANT, availableAs: ['poster'], description: 'Cartoon Succulent.', category: 'plants' },
+        { id: 17, name: 'Cute Cactus', artist: 'Botanic Artist', price: 10.00, image: cactusPLANT, availableAs: ['poster'], description: 'Cartoon Cactus.', category: 'plants' },
+        { id: 18, name: 'Cute Hanging Plant', artist: 'Botanic Artist', price: 30.00, image: hangPLANT, availableAs: ['sticker'], description: 'Cartoon hanging plant.', category: 'plants' },
+        { id: 19, name: 'Mushroom Party', artist: 'Botanic Artist', price: 4.00, image: mushroomPLANT, availableAs: ['sticker'], description: 'Personified mushrooms have a party.', category: 'plants' },
+        { id: 20, name: 'Hidden Friend', artist: 'Botanic Artist', price: 3.00, image: lilguyPLANT, availableAs: ['sticker','poster'], description: 'An original charcter hidden in a plant.', category: 'plants' },
  
  
         { id: 21, name: 'Miles Morales Jump', artist: 'MarvelIsBetter', price: 20.00, image: milesMARVEL, availableAs: ['sticker','poster'], description: 'Miles Morales Art.', category: 'superheros' },
@@ -66,8 +66,6 @@ export default function App() {
         { id: 23, name: 'PURE CHAOS!', artist: 'MarvelIsBetter', price: 6.00, image: purechaosMARVEL, availableAs: ['sticker'], description: 'PUREEE CHAOOSSS.', category: 'superheros' },
         { id: 24, name: 'Spiderman', artist: 'MarvelIsBetter', price: 20.00, image: spidermanMARVEL, availableAs: ['poster'], description: 'Spiderman jumping towards camera.', category: 'superheros' },
         { id: 25, name: 'Thors Fury', artist: 'MarvelIsBetter', price: 12.00, image: thorMARVEL, availableAs: ['sticker','poster'], description: 'Thor using his hammer.', category: 'superheros' },
- 
- 
  
     ]);
     
@@ -503,67 +501,12 @@ function CheckoutPage({ cart, navigateTo, clearCart }) {
 
     return (
         <div className="card checkout-card">
-            <CheckoutProgressBar currentStep={step} steps={steps} />
-            
-            {step === 1 && (
-                <form onSubmit={handleShippingSubmit}>
-                    <h2 className="card-title text-center mb-6">Shipping Information</h2>
-                    <div className="mb-4"><label htmlFor="name" className="form-label">Full Name</label><input type="text" id="name" name="name" className="form-input" value={shippingInfo.name} onChange={handleInputChange} required /></div>
-                    <div className="mb-4"><label htmlFor="address" className="form-label">Address</label><input type="text" id="address" name="address" className="form-input" value={shippingInfo.address} onChange={handleInputChange} required /></div>
-                    <div className="mb-4"><label htmlFor="city" className="form-label">City</label><input type="text" id="city" name="city" className="form-input" value={shippingInfo.city} onChange={handleInputChange} required /></div>
-                    <div className="mb-4"><label htmlFor="postalCode" className="form-label">Postal Code</label><input type="text" id="postalCode" name="postalCode" className="form-input" value={shippingInfo.postalCode} onChange={handleInputChange} required /></div>
-                    <div className="mb-4"><label htmlFor="country" className="form-label">Country</label><input type="text" id="country" name="country" className="form-input" value={shippingInfo.country} onChange={handleInputChange} required /></div>
-                    <div className="checkout-actions">
-                        <button type="button" onClick={() => navigateTo('cart')} className="btn btn-secondary">Back to Cart</button>
-                        <button type="submit" className="btn btn-primary">Proceed to Payment</button>
-                    </div>
-                </form>
-            )}
-
-            {step === 2 && (
-                <form onSubmit={handlePaymentSubmit}>
-                    <h2 className="card-title text-center mb-6">Payment Details</h2>
-                    <div className="mb-4"><label htmlFor="cardName" className="form-label">Name on Card</label><input type="text" id="cardName" name="cardName" className="form-input" required /></div>
-                    <div className="mb-4"><label htmlFor="cardNumber" className="form-label">Card Number</label><input type="text" id="cardNumber" name="cardNumber" className="form-input" placeholder="XXXX XXXX XXXX XXXX" required /></div>
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                        <div><label htmlFor="expiryDate" className="form-label">Expiry Date</label><input type="text" id="expiryDate" name="expiryDate" className="form-input" placeholder="MM/YY" required /></div>
-                        <div><label htmlFor="cvv" className="form-label">CVV</label><input type="text" id="cvv" name="cvv" className="form-input" placeholder="123" required /></div>
-                    </div>
-                    <div className="checkout-actions">
-                        <button type="button" onClick={() => setStep(1)} className="btn btn-secondary">Back to Shipping</button>
-                        <button type="submit" className="btn btn-primary">Review Order</button>
-                    </div>
-                </form>
-            )}
-
-            {step === 3 && (
-                <div>
-                    <h2 className="card-title text-center mb-6">Confirm Your Order</h2>
-                    <div className="card mb-6">
-                        <h3 className="font-bold">Shipping to:</h3>
-                        <p>{shippingInfo.name}</p>
-                        <p>{shippingInfo.address}</p>
-                        <p>{shippingInfo.city}, {shippingInfo.postalCode}, {shippingInfo.country}</p>
-                    </div>
-                    <div className="card">
-                        <h3 className="font-bold mb-4">Order Summary:</h3>
-                        {cart.map(item => (
-                            <div key={item.cartID} className="cart-item">
-                                <div className="cart-item-info">
-                                    <img src={item.image} alt={item.name} className="cart-item-image" />
-                                    <div><h4 className="cart-item-name">{item.name}</h4><p className="text-gray-600">Qty: {item.quantity}</p></div>
-                                </div>
-                                <p className="cart-item-price">${(item.price * item.quantity).toFixed(2)}</p>
-                            </div>
-                        ))}
-                        <div className="cart-summary"><p className="cart-total">Total: ${total.toFixed(2)}</p></div>
-                    </div>
-                    <div className="checkout-actions mt-8">
-                        <button onClick={() => setStep(2)} className="btn btn-secondary">Back to Payment</button>
-                        <button onClick={handlePlaceOrder} className="btn btn-primary">Place Order</button>
-                    </div>
-                </div>
-            )}
+            <h1 className="text-center mb-4">Checkout</h1>
+            <p className="text-center">Checkout functionality would be implemented here.</p>
+            <div className="checkout-actions">
+                <button onClick={() => navigateTo('cart')} className="btn btn-secondary">Back to Cart</button>
+                <button onClick={() => alert('Order Placed!')} className="btn btn-primary">Place Order</button>
+            </div>m
         </div>
     );
 }
