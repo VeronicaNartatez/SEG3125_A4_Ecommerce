@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './mainpage.css'; // Import the CSS file
+import './mainpage.css'; 
 
 //pics
 import anyaPicANIME from '../assets/anyaANIME.png';
