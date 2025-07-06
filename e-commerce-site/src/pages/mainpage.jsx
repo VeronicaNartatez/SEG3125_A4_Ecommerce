@@ -177,7 +177,120 @@ function Header({navigateTo,cartCount}){
 }
 
 //homepage
-
+function HomePage(props) {
+    const products = props.products;
+ 
+ 
+    const [filteredProducts, setFilteredProducts] = useState(products);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filters, setFilters] = useState({ poster: false, sticker: false, category: 'all' });
+    const [priceLimit, setPriceLimit] = useState(100);
+    const [maxPrice, setMaxPrice] = useState(100);
+ 
+ 
+    //check if products exists
+    useEffect(() => {
+        if (products && products.length > 0) {
+            const max = Math.ceil(Math.max(...products.map(p => p.price)));
+            setPriceLimit(max);
+            setMaxPrice(max);
+        }
+    }, [products]);
+ 
+ 
+    //make sure products not undefined before filtering
+    useEffect(() => {
+       
+        if (!products) return;
+ 
+ 
+        let tempProducts = products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.artist.toLowerCase().includes(searchTerm.toLowerCase()));
+        if (filters.category !== 'all') tempProducts = tempProducts.filter(p => p.category === filters.category);
+        if (filters.poster || filters.sticker) {
+            tempProducts = tempProducts.filter(p => {
+                const hasPoster = filters.poster && p.availableAs.includes('poster');
+                const hasSticker = filters.sticker && p.availableAs.includes('sticker');
+                if (filters.poster && filters.sticker) return hasPoster && hasSticker;
+                return hasPoster || hasSticker;
+            });
+        }
+        tempProducts = tempProducts.filter(p => p.price <= maxPrice);
+        setFilteredProducts(tempProducts);
+    }, [searchTerm, filters, maxPrice, products]);
+ 
+ 
+    const handleFilterChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFilters(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    };
+ 
+ 
+    return (
+        <div>
+            <div className="title-banner">
+                <h1>Discover & Buy Unique Art</h1>
+                <p>Amazing artwork from talented artists, now available as posters and stickers!</p>
+                <p className="promo-text">✨ Summer Sale! Get 20% off on all posters! ✨</p>
+            </div>
+ 
+ 
+            <div className="card">
+                <h3 className="card-title">Filter Your Search</h3>
+                <div className="filter-grid">
+ 
+ 
+                    {/* seach bar */}
+                    <div className="filter-item-search">
+                        <label For="search-input" className="form-label">Artwork or Artist</label>
+                        <input id="search-input" type="text" placeholder="e.g., Cosmic Wolf or Luna Creations" className="form-input" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    </div>
+ 
+ 
+                    {/* select category */}
+                    <div className="filter-item">
+                        <label For="category-filter" className="form-label">Category</label>
+                        <select id="category-filter" name="category" className="form-select" value={filters.category} onChange={handleFilterChange}>
+                            <option value="all">All</option><option value="anime">Anime</option><option value="plants">Plants</option><option value="animals">Animals</option><option value="superheros">Superheros</option>
+                        </select>
+                    </div>
+ 
+ 
+                    {/* choose wehther its sticker or poster filter */}
+                    <div className="filter-item">
+                        <label className="form-label">Type</label>
+                        <div className="checkbox-group">
+                            <label className="checkbox-label"><input type="checkbox" name="poster" checked={filters.poster} onChange={handleFilterChange} />Posters</label>
+                            <label className="checkbox-label"><input type="checkbox" name="sticker" checked={filters.sticker} onChange={handleFilterChange} />Stickers</label>
+                        </div>
+                    </div>
+ 
+ 
+                    {/*price filter */}
+                    <div className="filter-item-full">
+                        <label For="price-range" className="form-label">Price Range: <span>${maxPrice}</span></label>
+                        <input id="price-range" type="range" min="0" max={priceLimit} value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="form-range" />
+                    </div>
+                </div>
+            </div>
+ 
+ 
+            {/* list of products */}
+            <div className="product-grid">
+                {filteredProducts.map(product => (
+                    <div key={product.id} className="card product-card" onClick={() => props.navigateTo('product', product)}>
+                        <div className="product-card-img-container"><img src={product.image} className="product-card-img" alt={product.name} /></div>
+                        <div className="product-card-body">
+                            <h2 className="product-card-title">{product.name}</h2>
+                            <p className="product-card-artist">by {product.artist}</p>
+                            <p className="product-card-price">${product.price.toFixed(2)}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+ }
+ 
 
 //shows the item when user clicks on it page
 function ProductPage(props) {
@@ -266,7 +379,81 @@ function ProductPage(props) {
 }
 
 //shows page of users cart
+function CartPage(props) {
 
+
+    const cart = props.cart;
+    const navigateTo = props.navigateTo;
+    const removeFromCart = props.removeFromCart;
+ 
+ 
+    //calculate the total price
+    const total = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+ 
+ 
+    function handleContinueShoppingClick() {
+        navigateTo('home');
+    }
+ 
+ 
+    function handleCheckoutClick() {
+        navigateTo('checkout');
+    }
+ 
+ 
+    //html part
+    return (
+        <div>
+            <button onClick={handleContinueShoppingClick} className="btn btn-secondary mb-4">
+                &larr; Continue Shopping
+            </button>
+ 
+ 
+            <div className="card">
+                <h1 className="mb-6">Your Shopping Cart</h1>
+ 
+ 
+                {/* This is a conditional check. If the cart has no items (cart.length is 0)... */}
+                {cart.length === 0 ? (
+                    // ...then show this message.
+                    <p className="text-gray-600">Your cart is empty. Let's find some art!</p>
+                ) : (
+                    // ...otherwise, show the list of items.
+                    <div>
+                        {/* We use .map() to loop through each 'item' in the 'cart' array and create a div for it. */}
+                        {cart.map(item => (
+                            <div key={item.cartId} className="cart-item">
+                                <div className="cart-item-info">
+                                    <img src={item.image} alt={item.name} className="cart-item-image" />
+                                    <div>
+                                        <h2 className="cart-item-name">{item.name}</h2>
+                                        <p className="text-gray-600">Format: {item.selectedFormat} | Qty: {item.quantity}</p>
+                                    </div>
+                                </div>
+                                <div className="cart-item-actions">
+                                    <p className="cart-item-price">${(item.price * (item.quantity || 1)).toFixed(2)}</p>
+                                    {/* This button calls the removeFromCart function with the specific item's ID. */}
+                                    <button onClick={() => removeFromCart(item.cartId)} className="btn btn-danger-outline">Remove</button>
+                                </div>
+                            </div>
+                        ))}
+ 
+ 
+                        {/* This section shows the total price and the checkout button. */}
+                        <div className="cart-summary">
+                            <p className="cart-total">Total: ${total.toFixed(2)}</p>
+                            <button onClick={handleCheckoutClick} className="btn btn-primary mt-8">
+                                Proceed to Checkout
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+ }
+ 
+ 
 
 function CheckoutPage(navigateTo){
     return (
