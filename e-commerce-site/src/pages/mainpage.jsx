@@ -105,16 +105,13 @@ export default function App() {
 
     //remove item from cart
     function removeFromCart(cartId){
-        const updatedCart = [];
-
-        for (let i = 0; i < cart.length; i++) {
-            const item=cart[i];
-
-            if(item.cardId !== cardId) {
-                updatedCart.push(item);
-            }
-        }
+        const updatedCart = cart.filter(item => item.cartID !== cartId);
         setCart(updatedCart);
+    }
+
+    //clear cart
+    function clearCart(){
+        setCart([]);
     }
 
     function renderPage(){
@@ -122,7 +119,7 @@ export default function App() {
             case 'home': return <HomePage navigateTo={navigateTo} products={products} />;
             case 'product': return <ProductPage product={selectedProduct} navigateTo={navigateTo} addToCart={addToCart} />;
             case 'cart': return <CartPage cart={cart} navigateTo={navigateTo} removeFromCart={removeFromCart} />;
-            case 'checkout': return <CheckoutPage cart={cart} navigateTo={navigateTo} />;
+            case 'checkout': return <CheckoutPage cart={cart} navigateTo={navigateTo} clearCart={clearCart} />;
             case 'survey': return <SurveyPage navigateTo={navigateTo} />;
             default: return <HomePage navigateTo={navigateTo} products={products} />;
         }
@@ -241,16 +238,16 @@ function HomePage(props) {
  
                     {/* seach bar */}
                     <div className="filter-item-search">
-                        <label For="search-input" className="form-label">Artwork or Artist</label>
+                        <label htmlFor="search-input" className="form-label">Artwork or Artist</label>
                         <input id="search-input" type="text" placeholder="e.g., Cosmic Wolf or Luna Creations" className="form-input" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                     </div>
  
  
                     {/* select category */}
                     <div className="filter-item">
-                        <label For="category-filter" className="form-label">Category</label>
+                        <label htmlFor="category-filter" className="form-label">Category</label>
                         <select id="category-filter" name="category" className="form-select" value={filters.category} onChange={handleFilterChange}>
-                            <option value="all">All</option><option value="anime">Anime</option><option value="plants">Plants</option><option value="animals">Animals</option><option value="superheros">Superheros</option>
+                            <option value="all">All</option><option value="anime">Anime</option><option value="plant">Plants</option><option value="animals">Animals</option><option value="superheros">Superheros</option>
                         </select>
                     </div>
  
@@ -259,15 +256,15 @@ function HomePage(props) {
                     <div className="filter-item">
                         <label className="form-label">Type</label>
                         <div className="checkbox-group">
-                            <label className="checkbox-label"><input type="checkbox" name="poster" checked={filters.poster} onChange={handleFilterChange} />Posters</label>
-                            <label className="checkbox-label"><input type="checkbox" name="sticker" checked={filters.sticker} onChange={handleFilterChange} />Stickers</label>
+                            <label className="form-checkbox-label"><input type="checkbox" name="poster" checked={filters.poster} onChange={handleFilterChange} />Posters</label>
+                            <label className="form-checkbox-label"><input type="checkbox" name="sticker" checked={filters.sticker} onChange={handleFilterChange} />Stickers</label>
                         </div>
                     </div>
  
  
                     {/*price filter */}
                     <div className="filter-item-full">
-                        <label For="price-range" className="form-label">Price Range: <span>${maxPrice}</span></label>
+                        <label htmlFor="price-range" className="form-label">Price Range: <span className="price-display">${maxPrice}</span></label>
                         <input id="price-range" type="range" min="0" max={priceLimit} value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="form-range" />
                     </div>
                 </div>
@@ -313,7 +310,7 @@ function ProductPage(props) {
     }
 
     function handleQuantityChange(event) {
-        const newQuantity = Math.max(1, parseInt(event.target.value, 10));
+        const newQuantity = Math.max(1, parseInt(event.target.value, 10) || 1);
         setQuantity(newQuantity);
     }
     
@@ -329,7 +326,7 @@ function ProductPage(props) {
                 &larr; Back to Products
             </button>
             
-            <div className="card product-page-card">
+            <div className="card product-page-card mt-4">
                 <div className="product-page-layout">
 
                     {/* product pic */}
@@ -380,8 +377,6 @@ function ProductPage(props) {
 
 //shows page of users cart
 function CartPage(props) {
-
-
     const cart = props.cart;
     const navigateTo = props.navigateTo;
     const removeFromCart = props.removeFromCart;
@@ -413,16 +408,12 @@ function CartPage(props) {
                 <h1 className="mb-6">Your Shopping Cart</h1>
  
  
-                {/* This is a conditional check. If the cart has no items (cart.length is 0)... */}
                 {cart.length === 0 ? (
-                    // ...then show this message.
                     <p className="text-gray-600">Your cart is empty. Let's find some art!</p>
                 ) : (
-                    // ...otherwise, show the list of items.
                     <div>
-                        {/* We use .map() to loop through each 'item' in the 'cart' array and create a div for it. */}
                         {cart.map(item => (
-                            <div key={item.cartId} className="cart-item">
+                            <div key={item.cartID} className="cart-item">
                                 <div className="cart-item-info">
                                     <img src={item.image} alt={item.name} className="cart-item-image" />
                                     <div>
@@ -432,14 +423,12 @@ function CartPage(props) {
                                 </div>
                                 <div className="cart-item-actions">
                                     <p className="cart-item-price">${(item.price * (item.quantity || 1)).toFixed(2)}</p>
-                                    {/* This button calls the removeFromCart function with the specific item's ID. */}
-                                    <button onClick={() => removeFromCart(item.cartId)} className="btn btn-danger-outline">Remove</button>
+                                    <button onClick={() => removeFromCart(item.cartID)} className="btn btn-danger-outline">Remove</button>
                                 </div>
                             </div>
                         ))}
  
  
-                        {/* This section shows the total price and the checkout button. */}
                         <div className="cart-summary">
                             <p className="cart-total">Total: ${total.toFixed(2)}</p>
                             <button onClick={handleCheckoutClick} className="btn btn-primary mt-8">
@@ -453,27 +442,188 @@ function CartPage(props) {
     );
  }
  
- 
+function CheckoutProgressBar({ currentStep, steps }) {
+    const progressPercentage = currentStep > 1 ? ((currentStep - 1) / (steps.length - 1)) * 100 : 0;
 
-function CheckoutPage(navigateTo){
     return (
-        <div className="card checkout-card">
-            <h1 className="text-center mb-4">Checkout</h1>
-            <p className="text-center">Checkout functionality would be implemented here.</p>
-            <div className="checkout-actions">
-                <button onClick={() => navigateTo('cart')} className="btn btn-secondary">Back to Cart</button>
-                <button onClick={() => alert('Order Placed!')} className="btn btn-primary">Place Order</button>
-            </div>m
+        <div className="progress-bar-container">
+            <div className="progress-bar-line"></div>
+            <div className="progress-bar-fill" style={{ width: `${progressPercentage}%` }}></div>
+            {steps.map((label, index) => {
+                const stepNumber = index + 1;
+                const stepClass = stepNumber < currentStep ? 'completed' : (stepNumber === currentStep ? 'active' : '');
+                return (
+                    <div key={label} className={`progress-step ${stepClass}`}>
+                        <div className="progress-step-circle">{stepNumber <= currentStep ? '✓' : stepNumber}</div>
+                        <p className="progress-step-label">{label}</p>
+                    </div>
+                );
+            })}
         </div>
     );
 }
 
-function SurveyPage({navigateTo}){
+function CheckoutPage({ cart, navigateTo, clearCart }) {
+    const [step, setStep] = useState(1); // 1: Shipping, 2: Payment, 3: Confirmation
+    const [shippingInfo, setShippingInfo] = useState({ name: '', address: '', city: '', postalCode: '', country: '' });
+
+    const handleShippingSubmit = (e) => {
+        e.preventDefault();
+        setStep(2);
+    };
+    
+    const handlePaymentSubmit = (e) => {
+        e.preventDefault();
+        setStep(3);
+    };
+
+    const handlePlaceOrder = () => {
+        clearCart();
+        setStep(4); 
+    };
+    
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setShippingInfo(prev => ({ ...prev, [name]: value }));
+    };
+
+    const total = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+    const steps = ['Shipping', 'Payment', 'Confirmation'];
+
+    if (step === 4) {
+        return (
+            <div className="card checkout-card text-center">
+                <h1 className="text-green-600 font-bold mb-4">Order Successful!</h1>
+                <p className="text-gray-600 mb-6">Thank you for your purchase. We hope you enjoy your new art!</p>
+                <p className="mb-6">We would love to hear your feedback to improve our store.</p>
+                <button onClick={() => navigateTo('survey')} className="btn btn-primary w-full">Take a Quick Survey</button>
+            </div>
+        );
+    }
+
+    return (
+        <div className="card checkout-card">
+            <CheckoutProgressBar currentStep={step} steps={steps} />
+            
+            {step === 1 && (
+                <form onSubmit={handleShippingSubmit}>
+                    <h2 className="card-title text-center mb-6">Shipping Information</h2>
+                    <div className="mb-4"><label htmlFor="name" className="form-label">Full Name</label><input type="text" id="name" name="name" className="form-input" value={shippingInfo.name} onChange={handleInputChange} required /></div>
+                    <div className="mb-4"><label htmlFor="address" className="form-label">Address</label><input type="text" id="address" name="address" className="form-input" value={shippingInfo.address} onChange={handleInputChange} required /></div>
+                    <div className="mb-4"><label htmlFor="city" className="form-label">City</label><input type="text" id="city" name="city" className="form-input" value={shippingInfo.city} onChange={handleInputChange} required /></div>
+                    <div className="mb-4"><label htmlFor="postalCode" className="form-label">Postal Code</label><input type="text" id="postalCode" name="postalCode" className="form-input" value={shippingInfo.postalCode} onChange={handleInputChange} required /></div>
+                    <div className="mb-4"><label htmlFor="country" className="form-label">Country</label><input type="text" id="country" name="country" className="form-input" value={shippingInfo.country} onChange={handleInputChange} required /></div>
+                    <div className="checkout-actions">
+                        <button type="button" onClick={() => navigateTo('cart')} className="btn btn-secondary">Back to Cart</button>
+                        <button type="submit" className="btn btn-primary">Proceed to Payment</button>
+                    </div>
+                </form>
+            )}
+
+            {step === 2 && (
+                <form onSubmit={handlePaymentSubmit}>
+                    <h2 className="card-title text-center mb-6">Payment Details</h2>
+                    <div className="mb-4"><label htmlFor="cardName" className="form-label">Name on Card</label><input type="text" id="cardName" name="cardName" className="form-input" required /></div>
+                    <div className="mb-4"><label htmlFor="cardNumber" className="form-label">Card Number</label><input type="text" id="cardNumber" name="cardNumber" className="form-input" placeholder="XXXX XXXX XXXX XXXX" required /></div>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div><label htmlFor="expiryDate" className="form-label">Expiry Date</label><input type="text" id="expiryDate" name="expiryDate" className="form-input" placeholder="MM/YY" required /></div>
+                        <div><label htmlFor="cvv" className="form-label">CVV</label><input type="text" id="cvv" name="cvv" className="form-input" placeholder="123" required /></div>
+                    </div>
+                    <div className="checkout-actions">
+                        <button type="button" onClick={() => setStep(1)} className="btn btn-secondary">Back to Shipping</button>
+                        <button type="submit" className="btn btn-primary">Review Order</button>
+                    </div>
+                </form>
+            )}
+
+            {step === 3 && (
+                <div>
+                    <h2 className="card-title text-center mb-6">Confirm Your Order</h2>
+                    <div className="card mb-6">
+                        <h3 className="font-bold">Shipping to:</h3>
+                        <p>{shippingInfo.name}</p>
+                        <p>{shippingInfo.address}</p>
+                        <p>{shippingInfo.city}, {shippingInfo.postalCode}, {shippingInfo.country}</p>
+                    </div>
+                    <div className="card">
+                        <h3 className="font-bold mb-4">Order Summary:</h3>
+                        {cart.map(item => (
+                            <div key={item.cartID} className="cart-item">
+                                <div className="cart-item-info">
+                                    <img src={item.image} alt={item.name} className="cart-item-image" />
+                                    <div><h4 className="cart-item-name">{item.name}</h4><p className="text-gray-600">Qty: {item.quantity}</p></div>
+                                </div>
+                                <p className="cart-item-price">${(item.price * item.quantity).toFixed(2)}</p>
+                            </div>
+                        ))}
+                        <div className="cart-summary"><p className="cart-total">Total: ${total.toFixed(2)}</p></div>
+                    </div>
+                    <div className="checkout-actions mt-8">
+                        <button onClick={() => setStep(2)} className="btn btn-secondary">Back to Payment</button>
+                        <button onClick={handlePlaceOrder} className="btn btn-primary">Place Order</button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+
+function SurveyPage({ navigateTo }) {
+    const [submitted, setSubmitted] = useState(false);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setSubmitted(true);
+    };
+
+    if (submitted) {
+        return (
+            <div className="card survey-card text-center">
+                <h1 className="text-green-600 font-bold mb-4">Thank You!</h1>
+                <p className="text-gray-600 mb-6">Your feedback is valuable to us and helps us improve.</p>
+                <button onClick={() => navigateTo('home')} className="btn btn-primary w-full">Back to Home</button>
+            </div>
+        );
+    }
+    
     return (
         <div className="card survey-card">
-            <h1 className="text-center mb-4">Share Your Feedback</h1>
-            <p className="text-center">Survey form would be implemented here.</p>
-             <button onClick={() => navigateTo('home')} className="btn btn-secondary survey-button">Back to Home</button>
+            <h1 className="text-center mb-6">Share Your Feedback</h1>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-6">
+                    <label className="form-label">How would you rate your overall experience? (1=Poor, 5=Excellent)</label>
+                    <div className="flex justify-around p-2">
+                        {[1, 2, 3, 4, 5].map(rating => (
+                            <label key={rating} className="form-checkbox-label">
+                                <input type="radio" name="rating" value={rating} required className="mr-1"/>
+                                {rating}
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="mb-6">
+                    <label htmlFor="find-us" className="form-label">How did you find out about Blue Bubble?</label>
+                    <select id="find-us" name="find-us" className="form-select" required>
+                        <option value="">Select an option</option>
+                        <option value="social-media">Social Media</option>
+                        <option value="friend">From a friend</option>
+                        <option value="search">Search Engine (Google, etc.)</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div className="mb-6">
+                    <label htmlFor="comments" className="form-label">Any comments or suggestions?</label>
+                    <textarea id="comments" name="comments" rows="4" className="form-input" placeholder="Tell us what you think..."></textarea>
+                </div>
+
+                <div className="text-center">
+                    <button type="submit" className="btn btn-primary w-full survey-button">Submit Feedback</button>
+                    <button type="button" onClick={() => navigateTo('home')} className="btn-secondary-outline mt-4">Skip</button>
+                </div>
+            </form>
         </div>
     );
 }
@@ -483,7 +633,7 @@ function Footer(){
     return(
         <footer className="footer">
             <div className="container text-center text-gray-600">
-                <p>&copy; 2025 Artify. All Rights Reserved.</p>
+                <p>&copy; 2025 Blue Bubble. All Rights Reserved.</p>
                 <p className="footer-credit">Created for SEG3125 Assignment 4</p>
             </div>
         </footer>
